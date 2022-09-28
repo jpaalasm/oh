@@ -66,6 +66,10 @@ fun transformToOpenPeriods(openingHoursInput: InputType): Result<List<List<OpenP
                     close.first, open.second.value, close.second.value
                 ))
             }
+            
+            if (transitionsCopy.size > 0) {
+                return Result.failure(Exception("The input does not consists of consecutive open-close pairs"))
+            }
 
             return Result.success(openPeriodsByDay)
         },
