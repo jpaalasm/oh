@@ -9,7 +9,7 @@ data class OpeningItem(val type: OpeningState, val value: Int)
 typealias InputType = Map<String, List<OpeningItem>>
 
 val dayNamesCapitalized = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-var dayNames = dayNamesCapitalized.map { it.lowercase() }
+val dayNames = dayNamesCapitalized.map { it.lowercase() }
 
 private fun transformToFlatTransitionList(openingHoursInput: InputType): Result<List<Pair<Int, OpeningItem>>> {
     val openingHoursDaySequence = dayNames.map { openingHoursInput[it] }.filterNotNull()
@@ -33,7 +33,7 @@ private fun transformToFlatTransitionList(openingHoursInput: InputType): Result<
         }
     }
 
-    var flatTransitions = openingHoursDaySequence.withIndex()
+    val flatTransitions = openingHoursDaySequence.withIndex()
         .flatMap { (dayIndex, openingItems) -> openingItems.map { Pair(dayIndex, it) } }
         .toMutableList()
 
@@ -50,9 +50,9 @@ data class OpenPeriod(val closeDayIndex: Int, val openTime: Int, val closeTime: 
 fun transformToOpenPeriods(openingHoursInput: InputType): Result<List<List<OpenPeriod>>> {
     transformToFlatTransitionList(openingHoursInput).fold(
         onSuccess = {
-            var transitionsCopy = it.toMutableList()
+            val transitionsCopy = it.toMutableList()
 
-            var openPeriodsByDay = List(7) { mutableListOf<OpenPeriod>() }
+            val openPeriodsByDay = List(7) { mutableListOf<OpenPeriod>() }
 
             while (transitionsCopy.size >= 2) {
                 val open = transitionsCopy.removeAt(0)
@@ -83,10 +83,10 @@ private fun formatTimestamp(timestamp: Int): String {
 }
 
 fun formatOpeningHours(openPeriods: List<List<OpenPeriod>>): List<String> {
-    var result: MutableList<String> = mutableListOf()
+    val result: MutableList<String> = mutableListOf()
 
     for ((dayName, dayItems) in (dayNamesCapitalized zip openPeriods)) {
-        var timePart = when (dayItems) {
+        val timePart = when (dayItems) {
             listOf<OpenPeriod>() -> { "Closed" }
             else -> {
                 dayItems.joinToString(", ") { "${formatTimestamp(it.openTime)} - ${formatTimestamp(it.closeTime)}" }
